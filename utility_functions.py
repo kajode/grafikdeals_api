@@ -182,8 +182,12 @@ def read_weekly_average(card_type):
 
         total_price += price
         divider += 1
+    try:
+        div  = total_price / divider
+        return div
+    except:
+        return 0
 
-    return total_price/divider
 
 def mysql_dropall():
 
