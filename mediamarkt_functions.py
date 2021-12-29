@@ -11,7 +11,7 @@ def get_cards_html():
     for i in range(1,10):
 
         # parse website and extract all cards
-        soup = ut.get_soup("https://www.mediamarkt.de/de/category/grafikkarten-4560.html?page="+str(i))
+        soup = ut.get_soup_proxy("https://www.mediamarkt.de/de/category/grafikkarten-4560.html?page="+str(i))
         cards_list = soup.find('div', attrs={"data-test": "mms-search-srp-productlist"})
         l_cards_html = cards_list.find_all('div',attrs={"data-test": "mms-search-srp-productlist-item"})
 
@@ -41,20 +41,20 @@ def find_card(cards):
         #check if the card is looked for and add it to list
         for card_type in card_types:
             if card_type+' Ti' in card_fullname:
-                ut.add_link(shop_name, card_type+' Ti', card_link)
+                ut.file.add_link(shop_name, card_type+' Ti', card_link)
             elif card_type+' XT' in card_fullname:
                 print('adding to list')
-                ut.add_link(shop_name, card_type+' XT', card_link)
+                ut.file.add_link(shop_name, card_type+' XT', card_link)
             elif card_type in card_fullname:
                 print('adding to list')
-                ut.add_link(shop_name, card_type, card_link)
+                ut.file.add_link(shop_name, card_type, card_link)
 
 def check_price(card):
 
     card_type = card[0]
     card_max_price = 0.9*ut.read_weekly_average(card_type)
 
-    links = ut.read_links(shop_name, card_type)
+    links = ut.file.read_links(shop_name, card_type)
     deals = []
     minprice  = ''
 
@@ -62,7 +62,7 @@ def check_price(card):
     for link in links:
 
         #load website
-        soup = ut.get_soup(link)
+        soup = ut.get_soup_proxy(link)
 
         #check if availible
         status = soup.find('span', class_='StyledAvailabilityTypo-sc-901vi5-7')
@@ -74,7 +74,7 @@ def check_price(card):
         card_fullname = soup.find('h1', class_='StyledInfoTypo-sc-1jga2g7-0').text.replace('"','')
 
         #save price in history
-        ut.write_price(card_type, card_price)
+        ut.file.write_price(card_type, card_price)
 
         if card_price <= card_max_price:
             print("Found a deal!")

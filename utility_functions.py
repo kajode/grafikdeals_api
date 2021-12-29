@@ -9,7 +9,18 @@ import re
 from selenium_stealth import stealth
 import mysql.connector
 from enum import Enum
+import proxy_functions
+import proxy_functions as proxy
 
+working_proxies = [
+    '77.86.31.251:8080',
+    '187.110.236.145:53281',
+    '212.126.107.2:31475',
+    '185.189.199.75:23500',
+    '185.142.67.23:8080',
+    '101.99.95.54:80',
+    '20.105.253.176:8080'
+]
 advertiser_list = {'alternate.de': 11731, 'notebooksbilliger.de': 11348}
 publisher_id = 997083
 
@@ -31,42 +42,6 @@ mydb = mysql.connector.connect(
     password="SasaHGSDhgshd2371283",
     database="laravel_db"
 )
-
-
-def add_link(shop_name, type, link):
-
-    file_name = shop_name +'_'+ type.replace(' ', '_')
-    path = shop_name + '/' + file_name
-    # create file if it doesnt exist
-    if not os.path.exists(path):
-        open(path, "x")
-
-    file = open(path, "r")
-    for line in file:
-        if line.replace('\n', '') == link:
-            return 0
-    file.close()
-
-    file = open(path, "a")
-    file.write(link+'\n')
-    file.close()
-    return 1
-
-def read_links(shop_name, type):
-
-    file_name = shop_name + '_' + type.replace(' ', '_')
-    path = shop_name + '/' + file_name
-
-    #return error if file doesnt exist
-    if not os.path.exists(path):
-        open(path, "x")
-        return []
-
-    file = open(path, "r")
-    links = file.readlines()
-
-    return links
-
 
 # TODO: Implement clear cache
 def get_html(link):  ##opens website and returns html code
@@ -103,8 +78,60 @@ def get_html(link):  ##opens website and returns html code
 
     return html
 
+def get_html_proxy(link, proxy):  ##opens website and returns html code using proxies
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+
+    options = Options()
+    options.add_argument("--disable-dev-shm-usage")
+    #options.add_argument('--headless')
+    options.add_argument('--proxy-server=%s' % proxy)
+    options.add_argument('--no-sandbox')
+    options.add_argument('start-maximized')
+    options.add_argument('--lang=de')
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+    options.add_argument(f'user-agent={user_agent}')
+
+
+    browser = webdriver.Chrome(chrome_options=options)
+    stealth(browser,
+            languages=["de-de", "de"],
+            vendor="Google Inc.",
+            platform="Win32",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True,
+            )
+
+    browser.get(link)
+
+    ##wait for page to load and read it
+    html = browser.page_source
+    browser.delete_all_cookies()
+    browser.close()
+
+
+    return html
+
+
 def get_soup(link):
     return bs(get_html(link), 'html.parser')
+
+def get_soup_proxy(link):
+    proxy_list = proxy_functions.getproxies()
+
+    #use known proxies first
+    proxy_list = working_proxies + proxy_list
+
+    for proxy in proxy_list:
+        try:
+            html = get_html_proxy(link, proxy)
+            if 'client has been blocked by bot protection' in html:
+                continue
+            return bs(html, 'html.parser')
+        except:
+            pass
+    return -1
 
 def get_html_fast(link):
     short_link = re.findall("^https://.*\..{2,3}/", link)[0]
@@ -137,6 +164,7 @@ def get_html_fast(link):
 def get_soup_fast(link):
     return bs(get_html_fast(link), 'html.parser')
 
+
 def write_price(card_type, card_price):
     path = 'price_history/'+card_type.replace(' ', '_')
 
@@ -161,6 +189,40 @@ def read_prices(card_type):
     file.close()
 
     return prices
+
+def add_link(shop_name, type, link):
+
+    file_name = shop_name + '_' + type.replace(' ', '_')
+    path = shop_name + '/' + file_name
+    # create file if it doesnt exist
+    if not os.path.exists(path):
+        open(path, "x")
+
+    file = open(path, "r")
+    for line in file:
+        if line.replace('\n', '') == link:
+            return 0
+    file.close()
+
+    file = open(path, "a")
+    file.write(link + '\n')
+    file.close()
+    return 1
+
+def read_links(shop_name, type):
+
+    file_name = shop_name + '_' + type.replace(' ', '_')
+    path = shop_name + '/' + file_name
+
+    # return error if file doesnt exist
+    if not os.path.exists(path):
+        open(path, "x")
+        return []
+
+    file = open(path, "r")
+    links = file.readlines()
+
+    return links
 
 def read_weekly_average(card_type):
     prices = read_prices(card_type)
@@ -203,6 +265,7 @@ def mysql_dropall():
 
 def mysql_update(card_type, card_price, link, shop):
 
+    link = create_reflink(link)
     card_price = float(card_price)
 
     mycursor = mydb.cursor()
@@ -242,8 +305,6 @@ def create_reflink(link):
 
     reflink = 'https://www.awin1.com/cread.php?awinmid='+advertiser_id+'&awinaffid='+publisher_id+'&ued='+weird_link
     return reflink
-
-
 
 
 
