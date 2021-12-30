@@ -222,6 +222,19 @@ def mysql_update(card_type, card_price, link, shop):
     mycursor.execute(sql)
     mydb.commit()
     print(mycursor.rowcount,"card(s) updated or added")
+ 
+def mysql_add(card_type, card_price, link, shop):
+
+    card_price = float(card_price)
+
+    mycursor = mydb.cursor()
+
+    # add row if it doesnt exist
+    sql = "INSERT INTO grafikkarten (name, price, link, shop) VALUES ('%s', '%s', '%s', '%s')" % (card_type, card_price, link, shop_get_fullname(shop))
+
+    mycursor.execute(sql)
+    mydb.commit()
+    print(mycursor.rowcount,"card(s) added")
 
 
 def create_reflink(link):
