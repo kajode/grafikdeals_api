@@ -89,13 +89,16 @@ def check_price(card):
         card_price = float(soup.find('div', class_='price').find('span').text.replace('€', '').replace(' ', '').replace('.', '').replace(',','.'))
 
         #save price in history
-        ut.write_price(card_type, card_price)
-        # get ref link
+
         link = ut.create_reflink(link.replace('\n', ''))
-        ut.mysql_update(card_type, card_price, link, shop_name)
+        #ut.write_price(card_type, card_price)
+        ut.mysql_add(card_type, card_price, link, shop_name)
+
 
 
         if card_price < card_max_price:
+
+            # get ref link
 
             print(card_fullname)
             card_deals.append([card_type, card_price, card_fullname, link,  shop_name])
