@@ -3,6 +3,7 @@ import nbb_functions as nbb
 import mediamarkt_functions as mdm
 import chat_functions as chat
 import caseking_functions as ck
+import proxy_functions as proxy
 
 
 #vars
@@ -41,19 +42,18 @@ mdm.find_card(cards)
 '''
 
 #utility_functions.mysql_update('RTX 3090', '8796.34', 'https://google.de', 'google')
-
-link  =utility_functions.create_reflink('https://www.alternate.de/GIGABYTE/GeForce-RTX-3060-VISION-OC-12G-LHR-Grafikkarte/html/product/1763772')
-print(link)
+nbb.find_card(cards)
 for card in cards:
     all_deals = []
-    deals = alternate.check_price(card)
+    deals = nbb.check_price(card)
     print(deals)
     chat.send_deals(deals)
-
-"""    deals = nbb.check_price(card)
+"""    deals = alternate.check_price(card)
     print(deals)
-    chat.send_deals(deals)
+    chat.send_deals(deals)"""
 
+
+"""
     deals = mdm.check_price(card)
     print(deals)
     chat.send_deals(deals)

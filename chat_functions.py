@@ -1,5 +1,6 @@
 import logging
 import telegram
+import utility_functions as ut
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
@@ -17,7 +18,7 @@ def send(message):
 
 def send_deal(card_type, price, card_fullname, link, shop_name):
 
-
+    link = ut.create_reflink(link)
     text='''
 -------- *%s* --------
 %s                  

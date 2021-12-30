@@ -15,7 +15,7 @@ def get_cards_html():
 
     for link in links:
         try:
-            soup = ut.get_soup_fast(link)
+            soup = ut.get_soup_proxy(link)
         except:
             print('error parsing %s' % link)
             continue
@@ -89,6 +89,7 @@ def check_price(card): #checks the price for all links to that card and retruns 
 
         #save price in history
         ut.write_price(card_type, card_price)
+        ut.mysql_update(card_type,card_price,link,shop_name)
 
         if (card_price <= card_max_price):
             card_deals.append([card_type, card_price, card_fullname, link.replace('\n',''), shop_name])
