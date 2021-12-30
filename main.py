@@ -41,25 +41,25 @@ nbb.find_card(cards)
 mdm.find_card(cards)
 '''
 
-#utility_functions.mysql_update('RTX 3090', '8796.34', 'https://google.de', 'google')
-nbb.find_card(cards)
-for card in cards:
+cards = utility_functions.mysql_get_weekly('RTX 2060')
+print(cards)
+
+"""for card in cards:
     all_deals = []
     deals = nbb.check_price(card)
     print(deals)
     chat.send_deals(deals)
-"""    deals = alternate.check_price(card)
+    
+    deals = alternate.check_price(card)
     print(deals)
-    chat.send_deals(deals)"""
+    chat.send_deals(deals)
 
-
-"""
     deals = mdm.check_price(card)
     print(deals)
     chat.send_deals(deals)
 
     deals = ck.check_price(card)
     print(deals)
-    chat.send_deals(deals)"""
-
+    chat.send_deals(deals)
+"""
 

@@ -263,6 +263,15 @@ def mysql_dropall():
 
     print(mycursor.rowcount, "record(s) deleted")
 
+def mysql_get_weekly(card_type):
+    mycursor = mydb.cursor()
+
+    sql = "SELECT * FROM grafikkarten WHERE card_type='%s' AND timestamp <= CURDATE() AND timestamp > CURDATE() - INTERVAL 7 DAY"  % card_type
+    mycursor.execute(sql)
+    myresult = mycursor.fetchall()
+
+    return myresult
+
 def mysql_update(card_type, card_price, link, shop):
 
     link = create_reflink(link)
