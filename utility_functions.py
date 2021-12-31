@@ -335,6 +335,20 @@ def mysql_add(card_type, card_price, link, shop):
     print(mycursor.rowcount,"card(s) added")
 
 
+ 
+def mysql_update_deals(timestamp):
+
+    card_price = float(card_price)
+
+    mycursor = mydb.cursor()
+
+    # add row if it doesnt exist
+    sql = "insert into temp (select * from grafikkarten where price in (select min(price) from grafikkarten where id in ( select max(id) from grafikkarten where timestamp >= " + timestamp + "group by card_type, shop) group by card_type) group by card_type order by card_type) on duplicate key update price = values(price) and link = values(link) and id=values(id) and shop=values(shop) and timestamp=values(timestamp)"
+
+    mycursor.execute(sql)
+    mydb.commit()
+    print(mycursor.rowcount,"card(s) added")
+
 def create_reflink(link):
     vendor_link = re.findall("^https://.*\..{2,3}/", link)[0].replace('https://', '').replace('/', '').replace('www.','')
 

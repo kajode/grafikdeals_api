@@ -4,6 +4,7 @@ import mediamarkt_functions as mdm
 import chat_functions as chat
 import caseking_functions as ck
 import proxy_functions as proxy
+import datetime
 
 
 #vars
@@ -13,6 +14,7 @@ type = 0
 price = 1
 fullname = 2
 link = 3
+timestamp = datetime.datetime.now()
 
 cards = [
     ["RTX 2060", 500],
@@ -40,13 +42,15 @@ alternate.find_card(cards)
 nbb.find_card(cards)
 mdm.find_card(cards)
 '''
+alternate.find_card(cards)
 
 
 for card in cards:
     chat.check_and_send_deal(card[0])
 
-"""    nbb.check_price(card)
     alternate.check_price(card)
     mdm.check_price(card)
-    ck.check_price(card)"""
+    ck.check_price(card)
 
+# get best new price an save them in deals table
+utility_functions.mysql_update_deals(timestamp)
