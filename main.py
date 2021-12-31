@@ -43,20 +43,10 @@ mdm.find_card(cards)
 
 
 for card in cards:
-    all_deals = []
-    deals = nbb.check_price(card)
-    print(deals)
-    chat.send_deals(deals)
-    
-    deals = alternate.check_price(card)
-    print(deals)
-    chat.send_deals(deals)
+    chat.check_and_send_deal(card[0])
 
-"""    deals = mdm.check_price(card)
-    print(deals)
-    chat.send_deals(deals)
-
-    deals = ck.check_price(card)
-    print(deals)
-    chat.send_deals(deals)"""
+"""    nbb.check_price(card)
+    alternate.check_price(card)
+    mdm.check_price(card)
+    ck.check_price(card)"""
 

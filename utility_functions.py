@@ -269,12 +269,30 @@ def mysql_get_weekly(card_type):
     sql = "SELECT * FROM grafikkarten WHERE card_type='%s' AND timestamp <= CURDATE() AND timestamp > CURDATE() - INTERVAL 7 DAY"  % card_type
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
+    if len(myresult) == 0:
+        return -1
 
-    return myresult
+    #calculate average
+    counter = 0
+    for card in myresult:
+        counter +=card[1]
+    average = counter/len(myresult)
+
+    return average
 
 def mysql_in_chat(card_type):
     mycursor = mydb.cursor()
+    sql = "SELECT in_chat FROM deals WHERE card_type='%s'" % card_type
+    mycursor.execute(sql)
+    myresult = mycursor.fetchall()
+    return myresult[0]
 
+def mysql_get_deal(card_type):
+    mycursor = mydb.cursor()
+    sql = "SELECT * FROM deals WHERE card_type='%s'" % card_type
+    mycursor.execute(sql)
+    myresult = mycursor.fetchall()
+    return myresult[0]
 
 
 def mysql_update(card_type, card_price, link, shop):
@@ -294,12 +312,10 @@ def mysql_update(card_type, card_price, link, shop):
         sql = "INSERT INTO deals (card_type, price, link, shop, in_chat) VALUES ('%s', '%s', '%s', '%s', 0)" % (card_type, card_price, link, shop_get_fullname(shop))
     else:
         #update the card if not written already
-        print(myresult[0][1]==card_price)
         if myresult[0][1] == card_price and myresult[0][2] == link:
             sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s' WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
         else:
-            sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s', in_chat = 1 WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
-        print(sql)
+            sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s', in_chat = 0 WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
     mycursor.execute(sql)
     mydb.commit()
     print(mycursor.rowcount,"card(s) updated or added")
@@ -311,7 +327,7 @@ def mysql_add(card_type, card_price, link, shop):
     mycursor = mydb.cursor()
 
     # add row if it doesnt exist
-    sql = "INSERT INTO grafikkarten (card_type, price, link, shop) VALUES ('%s', '%s', '%s', '%s', 0)" % (card_type, card_price, link, shop_get_fullname(shop))
+    sql = "INSERT INTO grafikkarten (card_type, price, link, shop) VALUES ('%s', '%s', '%s', '%s')" % (card_type, card_price, link, shop_get_fullname(shop))
 
 
     mycursor.execute(sql)

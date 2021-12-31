@@ -14,19 +14,19 @@ def send(message):
     )
 
     bot = telegram.Bot(token=token)
-    #bot.send_message(text=message, chat_id=chatID, parse_mode = telegram.ParseMode.MARKDOWN_V2)
+    bot.send_message(text=message, chat_id=chatID, parse_mode = telegram.ParseMode.MARKDOWN_V2)
 
 def send_deal(card_type, price, card_fullname, link, shop_name):
 
     link = ut.create_reflink(link)
     text='''
 -------- *%s* --------
-%s                  
+Bei: %s                  
                     
 für *%.2f€*         
 %s                 
 --------------------------
-'''% (card_type, card_fullname, price, link)
+'''% (card_type, shop_name, price, link)
 
     ## fix reserved character issue with markdown
     text = text.replace('.', '\.').replace('-', '\-').replace('+', '\+').replace('=', '\=').replace('<', '\<').replace('>', '\>').replace('(', '\(').replace(')','\)').replace('_','\c')
@@ -35,7 +35,18 @@ für *%.2f€*
 
     send(text)
 
-def send_deals(deals):
-    for deal in deals:
-           send_deal(deal[0], deal[1], deal[2], deal[3], deal[4])
+def check_and_send_deal(card_type):
+    weekly_average = ut.mysql_get_weekly(card_type)
+    if weekly_average == -1:
+        return 0
+    
+    max_price = 0.9*weekly_average
+
+    card_data = ut.mysql_get_deal(card_type)
+
+    current_price = card_data[1]
+
+    if current_price <= max_price:
+        send_deal(card_type, current_price, '', card_data[2], card_data[3])
+
     return 0

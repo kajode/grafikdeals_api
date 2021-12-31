@@ -37,8 +37,6 @@ def find_card(cards):
 
 def check_price(card):
     card_type = card[0]
-    card_max_price = 0.9*ut.read_weekly_average(card_type)
-    card_deals = []
 
     b = Browser()
     b.set_handle_robots(False)
@@ -88,20 +86,13 @@ def check_price(card):
 
         card_price = float(soup.find('div', class_='price').find('span').text.replace('€', '').replace(' ', '').replace('.', '').replace(',','.'))
 
-        #save price in history
 
         link = ut.create_reflink(link.replace('\n', ''))
-        #ut.write_price(card_type, card_price)
+
+        # save price in history
         ut.mysql_add(card_type, card_price, link, shop_name)
+        #update deals !! REMOVE !! this function is only used for tesing missing implementation
+        ut.mysql_update(card_type, card_price, link, shop_name)
 
-
-
-        if card_price < card_max_price:
-
-            # get ref link
-
-            print(card_fullname)
-            card_deals.append([card_type, card_price, card_fullname, link,  shop_name])
-
-    return card_deals
+    return 0
 

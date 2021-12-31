@@ -52,8 +52,6 @@ def find_card(cards):
 
 def check_price(card): #checks the price for all links to that card and retruns matrix with 0 = link 1 = price
     card_type = card[0]
-    card_max_price = 0.9*ut.read_weekly_average(card_type)
-    card_deals = []
 
     #get links from file
     links = ut.read_links(shop_name, card_type)
@@ -89,9 +87,8 @@ def check_price(card): #checks the price for all links to that card and retruns 
 
         #save price in history
         ut.write_price(card_type, card_price)
+
+        # !! remove !! this function is only for testing purposes
         ut.mysql_update(card_type,card_price,link,shop_name)
 
-        if (card_price <= card_max_price):
-            card_deals.append([card_type, card_price, card_fullname, link.replace('\n',''), shop_name])
-
-    return card_deals
+    return 0
