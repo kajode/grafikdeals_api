@@ -272,6 +272,11 @@ def mysql_get_weekly(card_type):
 
     return myresult
 
+def mysql_in_chat(card_type):
+    mycursor = mydb.cursor()
+
+
+
 def mysql_update(card_type, card_price, link, shop):
 
     link = create_reflink(link)
@@ -286,11 +291,15 @@ def mysql_update(card_type, card_price, link, shop):
 
     if len(myresult) == 0:
         # add row if it doesnt exist
-        sql = "INSERT INTO deals (card_type, price, link, shop) VALUES ('%s', '%s', '%s', '%s')" % (card_type, card_price, link, shop_get_fullname(shop))
+        sql = "INSERT INTO deals (card_type, price, link, shop, in_chat) VALUES ('%s', '%s', '%s', '%s', 0)" % (card_type, card_price, link, shop_get_fullname(shop))
     else:
-        #update the card
-        sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s' WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
-
+        #update the card if not written already
+        print(myresult[0][1]==card_price)
+        if myresult[0][1] == card_price and myresult[0][2] == link:
+            sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s' WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
+        else:
+            sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s', in_chat = 1 WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
+        print(sql)
     mycursor.execute(sql)
     mydb.commit()
     print(mycursor.rowcount,"card(s) updated or added")
@@ -302,7 +311,8 @@ def mysql_add(card_type, card_price, link, shop):
     mycursor = mydb.cursor()
 
     # add row if it doesnt exist
-    sql = "INSERT INTO grafikkarten (name, price, link, shop) VALUES ('%s', '%s', '%s', '%s')" % (card_type, card_price, link, shop_get_fullname(shop))
+    sql = "INSERT INTO grafikkarten (card_type, price, link, shop) VALUES ('%s', '%s', '%s', '%s', 0)" % (card_type, card_price, link, shop_get_fullname(shop))
+
 
     mycursor.execute(sql)
     mydb.commit()

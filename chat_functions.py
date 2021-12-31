@@ -14,7 +14,7 @@ def send(message):
     )
 
     bot = telegram.Bot(token=token)
-    bot.send_message(text=message, chat_id=chatID, parse_mode = telegram.ParseMode.MARKDOWN_V2)
+    #bot.send_message(text=message, chat_id=chatID, parse_mode = telegram.ParseMode.MARKDOWN_V2)
 
 def send_deal(card_type, price, card_fullname, link, shop_name):
 

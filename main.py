@@ -41,10 +41,8 @@ nbb.find_card(cards)
 mdm.find_card(cards)
 '''
 
-cards = utility_functions.mysql_get_weekly('RTX 2060')
-print(cards)
 
-"""for card in cards:
+for card in cards:
     all_deals = []
     deals = nbb.check_price(card)
     print(deals)
@@ -54,12 +52,11 @@ print(cards)
     print(deals)
     chat.send_deals(deals)
 
-    deals = mdm.check_price(card)
+"""    deals = mdm.check_price(card)
     print(deals)
     chat.send_deals(deals)
 
     deals = ck.check_price(card)
     print(deals)
-    chat.send_deals(deals)
-"""
+    chat.send_deals(deals)"""
 
