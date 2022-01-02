@@ -91,8 +91,8 @@ def check_price(card):
 
         # save price in history
         ut.mysql_add(card_type, card_price, link, shop_name)
-        #update deals !! REMOVE !! this function is only used for tesing missing implementation
-        ut.mysql_update(card_type, card_price, link, shop_name)
+        #save price to temp table for later adding it to deals
+        ut.mysql_add_to_temp(card_type, card_price, link, shop_name, card_fullname)
 
     return 0
 

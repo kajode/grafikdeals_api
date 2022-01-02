@@ -35,18 +35,21 @@ cards = [
     ["RX 6900 XT", 1100]
 ]
 '''
-ck.find_card(cards)
-alternate.find_card(cards)
 nbb.find_card(cards)
+alternate.find_card(cards)
+ck.find_card(cards)
 mdm.find_card(cards)
 '''
 
+#fill up links
 
+
+#update deals
 for card in cards:
-    chat.check_and_send_deal(card[0])
-
-"""    nbb.check_price(card)
+    nbb.check_price(card)
     alternate.check_price(card)
-    mdm.check_price(card)
-    ck.check_price(card)"""
+
+    #finshing touches
+    utility_functions.mysql_update_deals(card[0])
+    chat.check_and_send_deal(card[0])
 

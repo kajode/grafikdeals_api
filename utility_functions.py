@@ -33,6 +33,8 @@ def shop_get_fullname(shop):
         return 'Alternate'
     if shop == 'caseking':
         return 'Caseking'
+    else:
+        return shop
 
 
 # connect to database
@@ -285,6 +287,12 @@ def mysql_in_chat(card_type):
     sql = "SELECT in_chat FROM deals WHERE card_type='%s'" % card_type
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
+
+
+    #if not in chat change to in chat
+    sql = "UPDATE deals SET in_chat=1 WHERE card_type='%s'" % card_type
+    mycursor.execute(sql)
+    mydb.commit()
     return myresult[0]
 
 def mysql_get_deal(card_type):
@@ -295,7 +303,7 @@ def mysql_get_deal(card_type):
     return myresult[0]
 
 
-def mysql_update(card_type, card_price, link, shop):
+def mysql_update(card_type, card_price, link, shop, card_fullname):
 
     link = create_reflink(link)
     card_price = float(card_price)
@@ -309,13 +317,13 @@ def mysql_update(card_type, card_price, link, shop):
 
     if len(myresult) == 0:
         # add row if it doesnt exist
-        sql = "INSERT INTO deals (card_type, price, link, shop, in_chat) VALUES ('%s', '%s', '%s', '%s', 0)" % (card_type, card_price, link, shop_get_fullname(shop))
+        sql = "INSERT INTO deals (card_type, card_fullname, price, link, shop, in_chat) VALUES ('%s', '%s', '%s', '%s', '%s', 0)" % (card_type, card_fullname, card_price, link, shop_get_fullname(shop))
     else:
         #update the card if not written already
-        if myresult[0][1] == card_price and myresult[0][2] == link:
+        if myresult[0][2] == card_price and myresult[0][3] == link:
             sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s' WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
         else:
-            sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s', in_chat = 0 WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
+            sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s', in_chat = 0, card_fullname = '%s' WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type, card_fullname)
     mycursor.execute(sql)
     mydb.commit()
     print(mycursor.rowcount,"card(s) updated or added")
@@ -332,10 +340,55 @@ def mysql_add(card_type, card_price, link, shop):
 
     mycursor.execute(sql)
     mydb.commit()
-    print(mycursor.rowcount,"card(s) added")
+    print(mycursor.rowcount,"card added to histroy")
+
+def mysql_add_to_temp(card_type, card_price, link, shop, card_fullname):
+
+    card_price = float(card_price)
+
+    mycursor = mydb.cursor()
+
+    # add row if it doesnt exist
+    sql = "INSERT INTO temp (card_type, card_fullname, price, link, shop) VALUES ('%s', '%s', '%s', '%s', '%s')" % (card_type, card_fullname, card_price, link, shop_get_fullname(shop))
+
+
+    mycursor.execute(sql)
+    mydb.commit()
+    print(mycursor.rowcount,"card added to temp")
+
+def mysql_update_deals(card_type): ##reads data for specific card_type from temp table and updates deals table with best deal
+
+    #get deal with best price
+    mycursor = mydb.cursor()
+    sql = "select * from temp where card_type='%s' order by price ASC limit 1"  % card_type
+    mycursor.execute(sql)
+    result = mycursor.fetchall()
+
+    #skip if list is empty
+    if len(result) == 0:
+        return 0
+
+    result = result[0]
+    card_fullname = result[1]
+    price = result[2]
+    shop = result[3]
+    link = result[4]
+
+    print(result)
+    #change best deal
+    mysql_update(card_type, price, link, shop, card_fullname)
+
+
+    #drop all rows with matching card type
+    sql = "delete from temp where card_type = '%s'" % card_type
+    mycursor.execute(sql)
+    mydb.commit()
 
 
 def create_reflink(link):
+    if 'awin' in link:
+        return link
+
     vendor_link = re.findall("^https://.*\..{2,3}/", link)[0].replace('https://', '').replace('/', '').replace('www.','')
 
     #check if vendor is supported otherwise just use link

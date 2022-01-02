@@ -88,7 +88,6 @@ def check_price(card): #checks the price for all links to that card and retruns 
         #save price in history
         ut.write_price(card_type, card_price)
 
-        # !! remove !! this function is only for testing purposes
-        ut.mysql_update(card_type,card_price,link,shop_name)
+        ut.mysql_add_to_temp(card_type, card_price, link, shop_name, card_fullname)
 
     return 0
