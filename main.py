@@ -35,14 +35,14 @@ cards = [
     ["RX 6900 XT", 1100]
 ]
 '''
-nbb.find_card(cards)
 alternate.find_card(cards)
 ck.find_card(cards)
 mdm.find_card(cards)
 '''
 
 #fill up links
-
+nbb.find_card(cards)
+alternate.find_card(cards)
 
 #update deals
 for card in cards:

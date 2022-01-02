@@ -66,7 +66,7 @@ def check_price(card): #checks the price for all links to that card and retruns 
         #get parsed website
         try:
             print(link)
-            soup = ut.get_soup_fast(link)
+            soup = ut.get_soup_proxy(link)
         except:
             print('error parsing %s' % link)
             continue

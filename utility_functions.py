@@ -51,7 +51,7 @@ def get_html(link):  ##opens website and returns html code
 
     options = Options()
     options.add_argument("--disable-dev-shm-usage")
-    #options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('start-maximized')
     options.add_argument('--lang=de')
@@ -85,7 +85,7 @@ def get_html_proxy(link, proxy):  ##opens website and returns html code using pr
 
     options = Options()
     options.add_argument("--disable-dev-shm-usage")
-    #options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument('--proxy-server=%s' % proxy)
     options.add_argument('--no-sandbox')
     options.add_argument('start-maximized')
@@ -126,11 +126,13 @@ def get_soup_proxy(link):
     proxy_list = working_proxies + proxy_list
 
     for proxy in proxy_list:
+        print("trying proxy: %s" % str(proxy))
         try:
             html = get_html_proxy(link, proxy)
             if 'client has been blocked by bot protection' in html:
                 continue
-            return bs(html, 'html.parser')
+            result = bs(html, 'html.parser')
+            return result
         except:
             pass
     return -1
