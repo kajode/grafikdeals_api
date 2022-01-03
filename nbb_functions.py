@@ -62,14 +62,16 @@ def check_price(card): #checks the price for all links to that card and retruns 
 
     #open shop website
     for link in links:
-
-        #get parsed website
-        try:
-            print(link)
-            soup = ut.get_soup_proxy(link)
-        except:
-            print('error parsing %s' % link)
-            continue
+        soup = ''
+        for i in range(0,2):
+            #get parsed website
+            try:
+                print(link)
+                soup = ut.get_soup_proxy(link)
+                break
+            except:
+                print('error parsing %s' % link)
+                pass
 
         #assert product is availible
         if len(soup.find_all('div', id='product_error')) != 0:

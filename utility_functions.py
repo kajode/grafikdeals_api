@@ -198,17 +198,14 @@ def add_link(shop_name, type, link):
 
     file_name = shop_name + '_' + type.replace(' ', '_')
     path = shop_name + '/' + file_name
-    # create file if it doesnt exist
-    if not os.path.exists(path):
-        open(path, "x")
 
-    file = open(path, "r")
+    file = open(path, "r+")
     for line in file:
         if line.replace('\n', '') == link:
             return 0
     file.close()
 
-    file = open(path, "a")
+    file = open(path, "a+")
     file.write(link + '\n')
     file.close()
     return 1

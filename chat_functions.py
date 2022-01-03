@@ -41,7 +41,7 @@ def check_and_send_deal(card_type):
     if weekly_average == -1:
         return 0
     
-    max_price = 0.9*weekly_average
+    max_price = 0.85*weekly_average
 
     card_data = ut.mysql_get_deal(card_type)
 
