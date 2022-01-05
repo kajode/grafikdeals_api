@@ -49,7 +49,7 @@ def check_and_send_deal(card_type):
 
     card_fullname = card_data[1]
 
-    if current_price <= max_price:
+    if current_price <= max_price and ut.mysql_in_chat(card_type) != 1:
         send_deal(card_type, current_price, card_fullname, card_data[3], card_data[4])
 
     return 0

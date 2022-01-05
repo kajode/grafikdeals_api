@@ -364,7 +364,7 @@ def mysql_in_chat(card_type):
     sql = "UPDATE deals SET in_chat=1 WHERE card_type='%s'" % card_type
     mycursor.execute(sql)
     mydb.commit()
-    return myresult[0]
+    return myresult[0][0]
 
 def mysql_get_deal(card_type):
     mycursor = mydb.cursor()
@@ -394,7 +394,7 @@ def mysql_update(card_type, card_price, link, shop, card_fullname):
         if myresult[0][2] == card_price and myresult[0][3] == link:
             sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s' WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type)
         else:
-            sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s', in_chat = 0, card_fullname = '%s' WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_type, card_fullname)
+            sql = "UPDATE deals SET price = '%.2f', shop = '%s', link = '%s', in_chat = 0, card_fullname = '%s' WHERE card_type = '%s'" % (card_price, shop_get_fullname(shop), link, card_fullname, card_type)
     mycursor.execute(sql)
     mydb.commit()
     print(mycursor.rowcount,"card(s) updated or added")
