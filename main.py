@@ -41,8 +41,8 @@ alternate.find_card(cards)
 ck.find_card(cards)
 mdm.find_card(cards)
 '''
-
-#fill up links
+chat.send_deal('THIS IS A TEST', 00, 'Test Card', 'https://test-link.de/', 'test shop', 2)
+"""#fill up links
 nbb.find_card(cards)
 alternate.find_card(cards)
 
@@ -55,4 +55,4 @@ for card_type in cards:
     #finshing touches
     utility_functions.mysql_update_deals(card_type)
     chat.check_and_send_deal(card_type)
-
+"""

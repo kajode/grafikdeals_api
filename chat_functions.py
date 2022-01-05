@@ -16,18 +16,29 @@ def send(message):
     bot = telegram.Bot(token=token)
     bot.send_message(text=message, chat_id=chatID, parse_mode = telegram.ParseMode.MARKDOWN_V2)
 
-def send_deal(card_type, price, card_fullname, link, shop_name):
+def send_deal(card_type, price, card_fullname, link, shop_name, value):
+
+    if value == 0:
+        emote = '\uE10d'
+    elif value == 1:
+        emote = '\uE10d\uE10d'
+    elif value ==2:
+        emote = '\uE10d\uE035\uE10d'
+
 
     link = ut.create_reflink(link)
-    text='''
--------- *%s* --------
+    text="""
+------ *%s* ------ %s
 %s
 Bei: %s                  
                     
 für *%.2f€*         
-%s                 
---------------------------
-'''% (card_type, card_fullname, shop_name, price, link)
+%s
+
+je mehr \uE10d's 
+desto besser der Deal   
+----------------------------------
+"""% (card_type, emote, card_fullname, shop_name, price, link)
 
     ## fix reserved character issue with markdown
     text = text.replace('.', '\.').replace('-', '\-').replace('+', '\+').replace('=', '\=').replace('<', '\<').replace('>', '\>').replace('(', '\(').replace(')','\)').replace('_','\c')
@@ -41,7 +52,9 @@ def check_and_send_deal(card_type):
     if weekly_average == -1:
         return 0
     
-    max_price = 0.85*weekly_average
+    value0_price = 0.93*weekly_average
+    value1_price = 0.9*weekly_average
+    value2_price = 0.85*weekly_average
 
     card_data = ut.mysql_get_deal(card_type)
 
@@ -49,7 +62,16 @@ def check_and_send_deal(card_type):
 
     card_fullname = card_data[1]
 
-    if current_price <= max_price and ut.mysql_in_chat(card_type) != 1:
-        send_deal(card_type, current_price, card_fullname, card_data[3], card_data[4])
+    in_chat = ut.mysql_in_chat(card_type)
+
+    #value 2
+    if current_price <= value2_price and in_chat != 1:
+        send_deal(card_type, current_price, card_fullname, card_data[3], card_data[4], 2)
+    #value 1
+    elif current_price <= value1_price and in_chat != 1:
+        send_deal(card_type, current_price, card_fullname, card_data[3], card_data[4], 1)
+    #value 0
+    elif current_price <= value0_price and in_chat != 1:
+        send_deal(card_type, current_price, card_fullname, card_data[3], card_data[4], 0)
 
     return 0
