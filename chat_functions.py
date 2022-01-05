@@ -35,8 +35,8 @@ Bei: %s
 für *%.2f€*         
 %s
 
-je mehr \uE10d's 
-desto besser der Deal   
+je mehr \uE10d's desto besser der
+Deal   
 ----------------------------------
 """% (card_type, emote, card_fullname, shop_name, price, link)
 
@@ -52,9 +52,9 @@ def check_and_send_deal(card_type):
     if weekly_average == -1:
         return 0
     
-    value0_price = 0.93*weekly_average
-    value1_price = 0.9*weekly_average
-    value2_price = 0.85*weekly_average
+    value0_price = 0.9*weekly_average
+    value1_price = 0.85*weekly_average
+    value2_price = 0.75*weekly_average
 
     card_data = ut.mysql_get_deal(card_type)
 
