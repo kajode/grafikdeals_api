@@ -272,11 +272,12 @@ def add_link(shop_name, type, link):
     file_name = shop_name + '_' + type.replace(' ', '_')
     path = base_path + shop_name + '/' + file_name
 
-    file = open(path, "w+")
-    for line in file:
-        if line.replace('\n', '') == link:
-            return 0
-    file.close()
+    if os.path.exists(path):
+        file = open(path, "r+")
+        for line in file:
+            if line.replace('\n', '') == link:
+                return 0
+        file.close()
 
     file = open(path, "a+")
     file.write(link + '\n')

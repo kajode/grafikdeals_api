@@ -5,12 +5,7 @@ import utility_functions as ut
 
 shop_name = "alternate"
 
-def find_card(cards):
-
-    card_types = []
-
-    for card in cards:
-        card_types.append(card[0])
+def find_card(card_types):
 
     headers = requests.utils.default_headers()
     headers.update({
@@ -35,8 +30,7 @@ def find_card(cards):
             link = card_html.get('href')
             ut.add_link(shop_name, card_type, link)
 
-def check_price(card):
-    card_type = card[0]
+def check_price(card_type):
 
     b = Browser()
     b.set_handle_robots(False)

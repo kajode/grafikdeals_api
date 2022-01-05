@@ -29,14 +29,9 @@ def get_cards_html():
 
     return cards_html
 
-def find_card(cards):
+def find_card(card_types):
 
     cards_html = get_cards_html()
-
-    card_types = []
-
-    for card in cards:
-        card_types.append(card[0])
 
     for card_type in card_types:
         for card_html in cards_html:
@@ -50,8 +45,7 @@ def find_card(cards):
             elif card_type in card_title:
                 ut.add_link(shop_name, card_type, link)
 
-def check_price(card): #checks the price for all links to that card and retruns matrix with 0 = link 1 = price
-    card_type = card[0]
+def check_price(card_type): #checks the price for all links to that card and retruns matrix with 0 = link 1 = price
 
     #get links from file
     links = ut.read_links(shop_name, card_type)

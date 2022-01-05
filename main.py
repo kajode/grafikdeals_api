@@ -15,24 +15,26 @@ fullname = 2
 link = 3
 
 cards = [
-    ["RTX 2060", 500],
-    ["RTX 2070", 600],
-    ["RTX 2080", 1000],
-    ["RTX 3060", 600],
-    ["RTX 3060 Ti", 650],
-    ["RTX 3070", 700],
-    ["RTX 3070 Ti", 800],
-    ["RTX 3080", 1000],
-    ["RTX 3080 Ti", 1300],
-    ["RTX 3090", 1500],
-    ["RX 6600", 500],
-    ["RX 6600 XT", 500],
-    ["RX 6700", 700],
-    ["RX 6700 XT", 700],
-    ["RX 6800", 900],
-    ["RX 6800 XT", 900],
-    ["RX 6900", 1100],
-    ["RX 6900 XT", 1100]
+    "GTX 1650",
+    "GTX 1660",
+    "RTX 2060",
+    "RTX 2070",
+    "RTX 2080",
+    "RTX 3060",
+    "RTX 3060 Ti",
+    "RTX 3070",
+    "RTX 3070 Ti",
+    "RTX 3080",
+    "RTX 3080 Ti",
+    "RTX 3090",
+    "RX 6600"
+    "RX 6600 XT",
+    "RX 6700",
+    "RX 6700 XT",
+    "RX 6800",
+    "RX 6800 XT",
+    "RX 6900",
+    "RX 6900 XT"
 ]
 '''
 alternate.find_card(cards)
@@ -45,11 +47,12 @@ nbb.find_card(cards)
 alternate.find_card(cards)
 
 #update deals
-for card in cards:
-    nbb.check_price(card)
-    alternate.check_price(card)
+for card_type in cards:
+    print(card_type)
+    nbb.check_price(card_type)
+    alternate.check_price(card_type)
 
     #finshing touches
-    utility_functions.mysql_update_deals(card[0])
-    chat.check_and_send_deal(card[0])
+    utility_functions.mysql_update_deals(card_type)
+    chat.check_and_send_deal(card_type)
 

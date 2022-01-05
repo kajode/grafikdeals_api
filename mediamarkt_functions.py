@@ -21,13 +21,9 @@ def get_cards_html():
     return cards_html
 
 
-def find_card(cards):
+def find_card(card_types):
 
     cards_html = get_cards_html()
-    card_types = []
-
-    for card in cards:
-        card_types.append(card[0])
 
     for card_html in cards_html:
         card_fullname = card_html.find('h2', attrs={"data-test": "product-title"}).text
@@ -49,9 +45,8 @@ def find_card(cards):
                 print('adding to list')
                 ut.file.add_link(shop_name, card_type, card_link)
 
-def check_price(card):
+def check_price(card_type):
 
-    card_type = card[0]
     card_max_price = 0.9*ut.read_weekly_average(card_type)
 
     links = ut.file.read_links(shop_name, card_type)
