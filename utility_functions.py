@@ -11,6 +11,10 @@ import mysql.connector
 from enum import Enum
 import proxy_functions
 import proxy_functions as proxy
+import zipfile
+import random
+
+base_path = '/home/grakabot/'
 
 working_proxies = [
     '77.86.31.251:8080',
@@ -21,6 +25,19 @@ working_proxies = [
     '101.99.95.54:80',
     '20.105.253.176:8080'
 ]
+
+auth_proxies = [
+    '212.236.236.158',
+    '212.236.238.14',
+    '212.236.237.255',
+    '212.236.237.57',
+    '212.236.237.19'
+]
+
+PROXY_PORT = 12323 # port
+PROXY_USER = '7acedea7e6dd' # username
+PROXY_PASS = 'c4ea82c881' # password
+
 advertiser_list = {'alternate.de': 11731, 'notebooksbilliger.de': 11348}
 publisher_id = 997083
 
@@ -81,12 +98,70 @@ def get_html(link):  ##opens website and returns html code
     return html
 
 def get_html_proxy(link, proxy):  ##opens website and returns html code using proxies
-    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
 
+    manifest_json = """
+    {
+        "version": "1.0.0",
+        "manifest_version": 2,
+        "name": "Chrome Proxy",
+        "permissions": [
+            "proxy",
+            "tabs",
+            "unlimitedStorage",
+            "storage",
+            "<all_urls>",
+            "webRequest",
+            "webRequestBlocking"
+        ],
+        "background": {
+            "scripts": ["background.js"]
+        },
+        "minimum_chrome_version":"22.0.0"
+    }
+    """
+
+    background_js = """
+    var config = {
+            mode: "fixed_servers",
+            rules: {
+            singleProxy: {
+                scheme: "http",
+                host: "%s",
+                port: parseInt(%s)
+            },
+            bypassList: ["localhost"]
+            }
+        };
+
+    chrome.proxy.settings.set({value: config, scope: "regular"}, function() {});
+
+    function callbackFn(details) {
+        return {
+            authCredentials: {
+                username: "%s",
+                password: "%s"
+            }
+        };
+    }
+
+    chrome.webRequest.onAuthRequired.addListener(
+                callbackFn,
+                {urls: ["<all_urls>"]},
+                ['blocking']
+    );
+    """ % (proxy, PROXY_PORT, PROXY_USER, PROXY_PASS)
+
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+    path = os.path.dirname(os.path.abspath(__file__))
+    pluginfile = 'proxy_auth_plugin.zip'
+    with zipfile.ZipFile(pluginfile, 'w') as zp:
+        zp.writestr("manifest.json", manifest_json)
+        zp.writestr("background.js", background_js)
     options = Options()
+    options.add_extension(pluginfile)
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument('--headless')
-    options.add_argument('--proxy-server=%s' % proxy)
+    #options.add_argument('--headless')
+    #options.add_argument('--proxy-server=%s' % proxy)
     options.add_argument('--no-sandbox')
     options.add_argument('start-maximized')
     options.add_argument('--lang=de')
@@ -94,8 +169,8 @@ def get_html_proxy(link, proxy):  ##opens website and returns html code using pr
     options.add_experimental_option('useAutomationExtension', False)
     options.add_argument(f'user-agent={user_agent}')
 
+    browser = webdriver.Chrome(os.path.join(path, 'chromedriver'), chrome_options=options)
 
-    browser = webdriver.Chrome(chrome_options=options)
     stealth(browser,
             languages=["de-de", "de"],
             vendor="Google Inc.",
@@ -104,7 +179,6 @@ def get_html_proxy(link, proxy):  ##opens website and returns html code using pr
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
             )
-
     browser.get(link)
 
     ##wait for page to load and read it
@@ -120,12 +194,11 @@ def get_soup(link):
     return bs(get_html(link), 'html.parser')
 
 def get_soup_proxy(link):
-    proxy_list = proxy_functions.getproxies()
 
-    #use known proxies first
-    proxy_list = working_proxies + proxy_list
+    shuffel_proxies = auth_proxies
+    random.shuffle(shuffel_proxies)
 
-    for proxy in proxy_list:
+    for proxy in shuffel_proxies:
         print("trying proxy: %s" % str(proxy))
         try:
             html = get_html_proxy(link, proxy)
@@ -135,7 +208,7 @@ def get_soup_proxy(link):
             return result
         except:
             pass
-    return -1
+
 
 def get_html_fast(link):
     short_link = re.findall("^https://.*\..{2,3}/", link)[0]
@@ -170,7 +243,7 @@ def get_soup_fast(link):
 
 
 def write_price(card_type, card_price):
-    path = 'price_history/'+card_type.replace(' ', '_')
+    path = base_path+'price_history/'+card_type.replace(' ', '_')
 
     # create file if it doesnt exist
     if not os.path.exists(path):
@@ -182,7 +255,7 @@ def write_price(card_type, card_price):
     file.close()
 
 def read_prices(card_type):
-    path = 'price_history/' + card_type.replace(' ', '_')
+    path = base_path + 'price_history/' + card_type.replace(' ', '_')
 
     # skip file if it doesnt exist
     if not os.path.exists(path):
@@ -197,9 +270,9 @@ def read_prices(card_type):
 def add_link(shop_name, type, link):
 
     file_name = shop_name + '_' + type.replace(' ', '_')
-    path = shop_name + '/' + file_name
+    path = base_path + shop_name + '/' + file_name
 
-    file = open(path, "r+")
+    file = open(path, "w+")
     for line in file:
         if line.replace('\n', '') == link:
             return 0
@@ -213,14 +286,13 @@ def add_link(shop_name, type, link):
 def read_links(shop_name, type):
 
     file_name = shop_name + '_' + type.replace(' ', '_')
-    path = shop_name + '/' + file_name
+    path = base_path + shop_name + '/' + file_name
 
     # return error if file doesnt exist
     if not os.path.exists(path):
-        open(path, "x")
         return []
 
-    file = open(path, "r")
+    file = open(path, "r+")
     links = file.readlines()
 
     return links
