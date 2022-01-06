@@ -340,7 +340,7 @@ def mysql_dropall():
 def mysql_get_weekly(card_type):
     mycursor = mydb.cursor()
 
-    sql = "SELECT * FROM grafikkarten WHERE card_type='%s' AND timestamp <= CURDATE() AND timestamp > CURDATE() - INTERVAL 7 DAY"  % card_type
+    sql = "SELECT * FROM grafikkarten WHERE card_type='%s'AND timestamp > CURDATE() - INTERVAL 7 DAY"  % card_type
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     if len(myresult) == 0:

@@ -52,7 +52,7 @@ def check_and_send_deal(card_type):
     if weekly_average == -1:
         return 0
     
-    value0_price = 0.9*weekly_average
+    value0_price = 0.90*weekly_average
     value1_price = 0.85*weekly_average
     value2_price = 0.75*weekly_average
 
