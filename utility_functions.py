@@ -169,7 +169,7 @@ def get_html_proxy(link, proxy):  ##opens website and returns html code using pr
     options.add_experimental_option('useAutomationExtension', False)
     options.add_argument(f'user-agent={user_agent}')
 
-    browser = webdriver.Chrome(os.path.join(path, 'chromedriver'), chrome_options=options)
+    browser = webdriver.Chrome(os.path.join(path, 'webdriver/chromedriver'), chrome_options=options)
 
     stealth(browser,
             languages=["de-de", "de"],
