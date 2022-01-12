@@ -279,6 +279,9 @@ def add_link(shop_name, type, link):
                 return 0
         file.close()
 
+    if not os.path.exists(path):
+        open(path, 'x')
+
     file = open(path, "a+")
     file.write(link + '\n')
     file.close()
