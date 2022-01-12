@@ -51,10 +51,17 @@ def check_and_send_deal(card_type):
     weekly_average = ut.mysql_get_weekly(card_type)
     if weekly_average == -1:
         return 0
+<<<<<<< HEAD
+
+    value0_price = 0.85*weekly_average
+    value1_price = 0.80*weekly_average
+    value2_price = 0.74*weekly_average
+=======
     
     value0_price = 0.90*weekly_average
     value1_price = 0.85*weekly_average
     value2_price = 0.75*weekly_average
+>>>>>>> parent of 2fe4d2b (lowered rates)
 
     card_data = ut.mysql_get_deal(card_type)
 
