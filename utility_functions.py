@@ -14,7 +14,7 @@ import proxy_functions as proxy
 import zipfile
 import random
 
-base_path = '/home/grakabot/'
+base_path = ''
 
 working_proxies = [
     '77.86.31.251:8080',
