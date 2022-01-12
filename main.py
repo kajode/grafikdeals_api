@@ -4,6 +4,7 @@ import mediamarkt_functions as mdm
 import chat_functions as chat
 import caseking_functions as ck
 import proxy_functions as proxy
+import jacob_functions as jacob
 
 
 #vars
@@ -42,11 +43,15 @@ ck.find_card(cards)
 mdm.find_card(cards)
 '''
 
+
 #fill up links
 nbb.find_card(cards)
 alternate.find_card(cards)
 
 #update deals
+
+jacob.check_prices(cards) #checks prices for all cards, so the file only has to be downloaded once
+
 for card_type in cards:
     print(card_type)
     nbb.check_price(card_type)

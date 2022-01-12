@@ -478,8 +478,3 @@ def create_reflink(link):
 
     reflink = 'https://www.awin1.com/cread.php?awinmid='+advertiser_id+'&awinaffid='+publisher_id+'&ued='+weird_link
     return reflink
-
-
-
-
-
