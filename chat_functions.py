@@ -35,7 +35,7 @@ Bei: %s
 für *%.2f€*         
 %s
 
-je mehr \uE10d's desto besser der
+je mehr \U0001F680's desto besser der
 Deal   
 ----------------------------------
 """% (card_type, emote, card_fullname, shop_name, price, link)
