@@ -43,6 +43,7 @@ ck.find_card(cards)
 mdm.find_card(cards)
 '''
 
+#chat.send_deal("kleiner Tipp", 501.32, 'Grafikkarten Drop im AMD Shop um 16:05', 'https://www.amd.com/de/direct-buy/de', 'AMD Shop', 2)
 
 #fill up links
 nbb.find_card(cards)

@@ -19,11 +19,11 @@ def send(message):
 def send_deal(card_type, price, card_fullname, link, shop_name, value):
 
     if value == 0:
-        emote = '\uE10d'
+        emote = '\U0001F680'
     elif value == 1:
-        emote = '\uE10d\uE10d'
+        emote = '\U0001F680\U0001F680'
     elif value ==2:
-        emote = '\uE10d\uE035\uE10d'
+        emote = '\U0001F680\U0001F48E\U0001F680'
 
 
     link = ut.create_reflink(link)
@@ -52,9 +52,9 @@ def check_and_send_deal(card_type):
     if weekly_average == -1:
         return 0
 
-    value0_price = 0.85*weekly_average
-    value1_price = 0.80*weekly_average
-    value2_price = 0.74*weekly_average
+    value0_price = 0.82*weekly_average
+    value1_price = 0.78*weekly_average
+    value2_price = 0.75*weekly_average
 
     card_data = ut.mysql_get_deal(card_type)
 
