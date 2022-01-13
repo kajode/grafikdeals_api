@@ -1,4 +1,5 @@
 import alternate_functions as alternate
+import mediamarkt_functions
 import nbb_functions as nbb
 import mediamarkt_functions as mdm
 import chat_functions as chat
@@ -43,19 +44,32 @@ ck.find_card(cards)
 mdm.find_card(cards)
 '''
 
+#chat.send_deal("kleiner Tipp", 501.32, 'Grafikkarten Drop im AMD Shop um 16:05', 'https://www.amd.com/de/direct-buy/de', 'AMD Shop', 2)
 
 #fill up links
-nbb.find_card(cards)
-alternate.find_card(cards)
+#nbb.find_card(cards)
+#alternate.find_card(cards)
+
+## experimental feature
+try:
+    mediamarkt_functions.find_card(cards)
+except:
+    pass
 
 #update deals
 
-jacob.check_prices(cards) #checks prices for all cards, so the file only has to be downloaded once
+#jacob.check_prices(cards) #checks prices for all cards, so the file only has to be downloaded once
 
 for card_type in cards:
     print(card_type)
-    nbb.check_price(card_type)
-    alternate.check_price(card_type)
+    #nbb.check_price(card_type)
+    #alternate.check_price(card_type)
+
+    ## experimental feature
+    try:
+        mediamarkt_functions.check_price(card_type)
+    except:
+        pass
 
     #finshing touches
     utility_functions.mysql_update_deals(card_type)

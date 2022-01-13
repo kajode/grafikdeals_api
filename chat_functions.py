@@ -19,11 +19,11 @@ def send(message):
 def send_deal(card_type, price, card_fullname, link, shop_name, value):
 
     if value == 0:
-        emote = '\uE10d'
+        emote = '\U0001F680'
     elif value == 1:
-        emote = '\uE10d\uE10d'
+        emote = '\U0001F680\U0001F680'
     elif value ==2:
-        emote = '\uE10d\uE035\uE10d'
+        emote = '\U0001F680\U0001F48E\U0001F680'
 
 
     link = ut.create_reflink(link)
