@@ -283,7 +283,10 @@ def add_link(shop_name, type, link):
         open(path, 'x')
 
     file = open(path, "a+")
-    file.write(link + '\n')
+    try:
+        file.write(link + '\n')
+    except:
+        print("Error adding %s to link list" % link)
     file.close()
     return 1
 

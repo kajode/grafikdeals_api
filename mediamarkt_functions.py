@@ -37,19 +37,17 @@ def find_card(card_types):
         #check if the card is looked for and add it to list
         for card_type in card_types:
             if card_type+' Ti' in card_fullname:
-                ut.file.add_link(shop_name, card_type+' Ti', card_link)
+                ut.add_link(shop_name, card_type+' Ti', card_link)
             elif card_type+' XT' in card_fullname:
                 print('adding to list')
-                ut.file.add_link(shop_name, card_type+' XT', card_link)
+                ut.add_link(shop_name, card_type+' XT', card_link)
             elif card_type in card_fullname:
                 print('adding to list')
-                ut.file.add_link(shop_name, card_type, card_link)
+                ut.add_link(shop_name, card_type, card_link)
 
 def check_price(card_type):
 
-    card_max_price = 0.9*ut.read_weekly_average(card_type)
-
-    links = ut.file.read_links(shop_name, card_type)
+    links = ut.read_links(shop_name, card_type)
     deals = []
     minprice  = ''
 
@@ -66,14 +64,14 @@ def check_price(card_type):
             continue
 
         card_price = float(soup.find('span', class_='ScreenreaderTextSpan-sc-11hj9ix-0').text.replace('undefined ',''))
-        card_fullname = soup.find('h1', class_='StyledInfoTypo-sc-1jga2g7-0').text.replace('"','')
+        try:
+            card_fullname = soup.find('h1', class_='StyledInfoTypo-sc-1jga2g7-0').text.replace('"','')
+        except:
+            card_fullname = soup.find('h1', class_='StyledInfoTypo-sc-1jga2g7-1').text.replace('"','')
 
         #save price in history
-        ut.file.write_price(card_type, card_price)
-
-        if card_price <= card_max_price:
-            print("Found a deal!")
-            deals.append([card_type, card_price, card_fullname, link.replace('\n', ''), shop_name])
+        ut.write_price(card_type, card_price)
+        ut.mysql_add_to_temp(card_type, card_price, link, shop_name, card_fullname)
 
     return deals
 
