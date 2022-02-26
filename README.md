@@ -9,5 +9,5 @@ Crawler sammeln werden zudem in einer MySQL Datenbank für z.B. die Einbindung i
 gespeichert. Die Verwendung einer MySQL Datendank ist in der aktuellen Version unerlässlich. 
 
 # Nachwort
-Ich möchte darauf hinweisen, dass im Code noch unbekannte Bugs liegen können und daher keine Verantwortung für die Verwendung des Codes übernehme. Der Code
+Ich möchte darauf hinweisen, dass im Code noch unbekannte Bugs liegen können und ich daher keine Verantwortung für die Verwendung des Codes übernehme. Der Code
 ist für Menschen mit Erfahrung in Python Programmierung und einen verantwortungsvollen Umgang gedacht. 
