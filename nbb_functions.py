@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup as bs
 import utility_functions as ut
 
 shop_name = 'nbb'

@@ -1,6 +1,4 @@
-from bs4 import BeautifulSoup as bs
 import utility_functions as ut
-import time
 
 shop_name = 'mediamarkt'
 

@@ -1,11 +1,13 @@
+""" this file contains all the functions related to the telegram bot. If you like to make any changes to
+when the bots sends a message look at check_and_send_deal"""
+
 import logging
 import telegram
 import utility_functions as ut
-from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-token = '5037194249:AAHfgCGQ9D2mu2TxqoXcNNgJK2DUex4AgKU'
-chatID = -1001777891004
+#enter your telegram bot token and the chat id here:
+token = 'sampleToken'
+chatID = 1234567
 
 def send(message):
     # Enable logging
@@ -48,6 +50,8 @@ Deal
     send(text)
 
 def check_and_send_deal(card_type):
+    """checks if the deal is good by taking a look into the MySQL database"""
+
     weekly_average = ut.mysql_get_weekly(card_type)
     if weekly_average == -1:
         return 0

@@ -1,6 +1,7 @@
+"""you can find most of the commonly used functions in here - it may be time to clean this file up using classes"""
+
 import os
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import time
 from bs4 import BeautifulSoup as bs
@@ -8,35 +9,33 @@ from mechanize import Browser
 import re
 from selenium_stealth import stealth
 import mysql.connector
-from enum import Enum
-import proxy_functions
-import proxy_functions as proxy
 import zipfile
 import random
 
 base_path = ''
 
+#add any unauthenticated proxies here
 working_proxies = [
-    '77.86.31.251:8080',
-    '187.110.236.145:53281',
-    '212.126.107.2:31475',
-    '185.189.199.75:23500',
-    '185.142.67.23:8080',
-    '101.99.95.54:80',
-    '20.105.253.176:8080'
+    '192.168.178.1:8080',
 ]
 
+#add any authenticated proxies here
 auth_proxies = [
-    '212.236.236.158',
-    '212.236.238.14',
-    '212.236.237.255',
-    '212.236.237.57',
-    '212.236.237.19'
+    '192.168.178.1'
 ]
 
+#enter further details for authenticated proxies here
 PROXY_PORT = 12323 # port
-PROXY_USER = '7acedea7e6dd' # username
-PROXY_PASS = 'c4ea82c881' # password
+PROXY_USER = 'username' # username
+PROXY_PASS = 'password' # password
+
+# add details for the MySQL Database here
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="username",
+    password="password",
+    database="example_database"
+)
 
 advertiser_list = {'alternate.de': 11731, 'notebooksbilliger.de': 11348}
 publisher_id = 997083
@@ -53,16 +52,6 @@ def shop_get_fullname(shop):
     else:
         return shop
 
-
-# connect to database
-mydb = mysql.connector.connect(
-    host="grafikdeals.de",
-    user="graka_user",
-    password="SasaHGSDhgshd2371283",
-    database="laravel_db"
-)
-
-# TODO: Implement clear cache
 def get_html(link):  ##opens website and returns html code
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
 
@@ -434,7 +423,8 @@ def mysql_add_to_temp(card_type, card_price, link, shop, card_fullname):
     mydb.commit()
     print(mycursor.rowcount,"card added to temp")
 
-def mysql_update_deals(card_type): ##reads data for specific card_type from temp table and updates deals table with best deal
+def mysql_update_deals(card_type):
+    """reads data for specific card_type from temp table and updates deals table with best deal"""
 
     #get deal with best price
     mycursor = mydb.cursor()
@@ -464,23 +454,5 @@ def mysql_update_deals(card_type): ##reads data for specific card_type from temp
 
 
 def create_reflink(link):
-    if 'awin' in link:
-        return link
-
-    vendor_link = re.findall("^https://.*\..{2,3}/", link)[0].replace('https://', '').replace('/', '').replace('www.','')
-
-    #check if vendor is supported otherwise just use link
-    try:
-        advertiser_id = advertiser_list[vendor_link]
-        publisher_id = 997083
-    except:
-        return link
-
-    ##turn ids into string
-    advertiser_id = str(advertiser_id)
-    publisher_id = str(publisher_id)
-
-    weird_link  = link.replace(':', '%3A').replace('/', '%2F')
-
-    reflink = 'https://www.awin1.com/cread.php?awinmid='+advertiser_id+'&awinaffid='+publisher_id+'&ued='+weird_link
-    return reflink
+    """this function may be used to create a refferal link"""
+    return link

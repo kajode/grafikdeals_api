@@ -1,5 +1,4 @@
 import utility_functions as ut
-from bs4 import BeautifulSoup as bs
 
 shop_name = 'caseking'
 

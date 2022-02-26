@@ -1,4 +1,4 @@
-from proxybroker import Broker
+"""currently not in use. If you are looking for the proxy settings take a look into utility_functions.py"""
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 import asyncio
@@ -15,6 +15,7 @@ async def show(proxies):
         proxy_list.append(ip+':'+port)
 
 def getproxies():
+    """this function is using proxybroker to get public proxies - it is currently not in use"""
 
     proxies = asyncio.Queue()
     broker = Broker(proxies)
