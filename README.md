@@ -1,6 +1,6 @@
 # Willkommen beim Grafikdeals - Grafikkartenpreis Scanner
 
-Diese Code erlaub es die Webseiten verschiedener Händler nach Preisupdates und neuen Listings neuer Grafikkarten abzusuchen. 
+Diese Code erlaubt es dir Webseiten verschiedener Händler nach Preisupdates und neuen Listings neuer Grafikkarten abzusuchen. 
 Da ich mich entschieden habe das Projekt zu beenden möchte ich den Code veröffentlichen.
 
 
